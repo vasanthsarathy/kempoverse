@@ -1,0 +1,127 @@
+/* Design System Variables */
+:root {
+  --ink-black: #050608;
+  --paper-white: #f5f2ec;
+  --deep-red: #c1121f;
+  --muted-gray: #9ca3af;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Space Mono', monospace;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --max-width: 640px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--ink-black);
+  color: var(--paper-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.app-header {
+  text-align: center;
+  padding: var(--spacing-xl) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--spacing-lg);
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.logo-dot {
+  color: var(--deep-red);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-white);
+}
+
+.tagline {
+  font-size: 12px;
+  color: var(--muted-gray);
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-content {
+  text-align: center;
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.placeholder-content h2 {
+  font-size: 20px;
+  margin-bottom: var(--spacing-md);
+  color: var(--paper-white);
+}
+
+.placeholder-content p {
+  font-size: 14px;
+  color: var(--muted-gray);
+  margin-bottom: var(--spacing-sm);
+}
+
+.status-text {
+  color: var(--deep-red) !important;
+  font-weight: 600;
+  margin-top: var(--spacing-md) !important;
+}
+
+.app-footer {
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: var(--spacing-lg);
+  font-size: 12px;
+  color: var(--muted-gray);
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
+@media (min-width: 768px) {
+  .app {
+    padding: var(--spacing-lg);
+  }
+  .logo-text {
+    font-size: 28px;
+  }
+}
