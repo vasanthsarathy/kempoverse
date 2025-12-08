@@ -1,0 +1,10 @@
+name = "kempoverse"
+compatibility_date = "2025-12-08"
+pages_build_output_dir = "dist"
+
+# D1 Database binding for local and production
+[[d1_databases]]
+binding = "DB"  # Access in code as context.env.DB
+database_name = "kempoverse-db"
+database_id = "f35a81c9-1470-4e48-85cc-1ad58576f057"
+migrations_dir = "migrations"
