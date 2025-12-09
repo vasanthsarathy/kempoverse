@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchEntries } from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 import EntryList from '../components/EntryList';
 import type { Entry } from '../types';
 import './Home.css';
@@ -8,6 +10,7 @@ function Home() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     fetchEntries()
@@ -48,8 +51,15 @@ function Home() {
   return (
     <div className="home">
       <div className="home-header">
-        <h2>All Entries</h2>
-        <p className="entry-count">{entries.length} total entries</p>
+        <div className="home-header-content">
+          <h2>All Entries</h2>
+          <p className="entry-count">{entries.length} total entries</p>
+        </div>
+        {isAuthenticated && (
+          <Link to="/entries/new" className="new-entry-button">
+            + New Entry
+          </Link>
+        )}
       </div>
       <EntryList entries={entries} />
     </div>

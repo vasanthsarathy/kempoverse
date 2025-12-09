@@ -4,6 +4,14 @@ import type { Entry, ApiResponse, EntryListResponse } from '../types';
 // Wrangler serves both the frontend and API from the same origin
 const API_BASE = '/api';
 
+// Helper to get auth headers
+function getAuthHeaders(token: string): HeadersInit {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  };
+}
+
 export async function fetchEntries(): Promise<Entry[]> {
   const response = await fetch(`${API_BASE}/entries`);
   if (!response.ok) {
@@ -32,4 +40,67 @@ export async function fetchEntry(id: string): Promise<Entry> {
     throw new Error('No data returned');
   }
   return json.data;
+}
+
+export async function createEntry(
+  entry: Omit<Entry, 'id' | 'created_at' | 'updated_at'>,
+  token: string
+): Promise<Entry> {
+  const response = await fetch(`${API_BASE}/entries`, {
+    method: 'POST',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(entry),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to create entry');
+  }
+
+  const json: ApiResponse<Entry> = await response.json();
+  if (json.error) {
+    throw new Error(json.error);
+  }
+  if (!json.data) {
+    throw new Error('No data returned');
+  }
+  return json.data;
+}
+
+export async function updateEntry(
+  id: string,
+  updates: Partial<Entry>,
+  token: string
+): Promise<Entry> {
+  const response = await fetch(`${API_BASE}/entries/${id}`, {
+    method: 'PUT',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(updates),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to update entry');
+  }
+
+  const json: ApiResponse<Entry> = await response.json();
+  if (json.error) {
+    throw new Error(json.error);
+  }
+  if (!json.data) {
+    throw new Error('No data returned');
+  }
+  return json.data;
+}
+
+export async function deleteEntry(id: string, token: string): Promise<void> {
+  const response = await fetch(`${API_BASE}/entries/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(token),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to delete entry');
+  }
 }

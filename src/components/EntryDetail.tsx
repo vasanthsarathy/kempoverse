@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { fetchEntry } from '../utils/api';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { fetchEntry, deleteEntry } from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 import type { Entry } from '../types';
 import './EntryDetail.css';
 
@@ -9,6 +10,26 @@ function EntryDetail() {
   const [entry, setEntry] = useState<Entry | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const { isAuthenticated, token } = useAuth();
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    if (!id || !token) return;
+
+    if (!confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      await deleteEntry(id, token);
+      navigate('/');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to delete entry');
+      setDeleting(false);
+    }
+  };
 
   useEffect(() => {
     if (!id) {
@@ -67,9 +88,25 @@ function EntryDetail() {
 
   return (
     <div className="entry-detail">
-      <Link to="/" className="back-link">
-        ← Back to entries
-      </Link>
+      <div className="entry-actions">
+        <Link to="/" className="back-link">
+          ← Back to entries
+        </Link>
+        {isAuthenticated && (
+          <div className="admin-actions">
+            <Link to={`/entries/${id}/edit`} className="edit-button">
+              Edit
+            </Link>
+            <button
+              onClick={handleDelete}
+              className="delete-button"
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting...' : 'Delete'}
+            </button>
+          </div>
+        )}
+      </div>
 
       <article className="entry-content">
         <header className="entry-detail-header">
