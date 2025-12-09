@@ -178,6 +178,17 @@
   background: #9a0007;
 }
 
+.no-results {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #666;
+}
+
+.no-results p {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
 @media (max-width: 768px) {
   .home {
     padding: 1rem;

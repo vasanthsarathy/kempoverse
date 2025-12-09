@@ -52,30 +52,6 @@ function Home() {
     loadEntries();
   }, [loadEntries]);
 
-  if (loading) {
-    return (
-      <div className="home">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading entries...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="home">
-        <div className="error-container">
-          <p className="error-message">{error}</p>
-          <button onClick={() => window.location.reload()} className="retry-button">
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   const clearFilters = () => {
     setSearchInput('');
     setSearchQuery('');
@@ -150,7 +126,30 @@ function Home() {
         </div>
       </div>
 
-      <EntryList entries={entries} />
+      {loading && !entries.length ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading entries...</p>
+        </div>
+      ) : error ? (
+        <div className="error-container">
+          <p className="error-message">{error}</p>
+          <button onClick={loadEntries} className="retry-button">
+            Retry
+          </button>
+        </div>
+      ) : entries.length === 0 ? (
+        <div className="no-results">
+          <p>No entries found{hasActiveFilters ? ' matching your filters' : ''}.</p>
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="clear-filters-button">
+              Clear Filters
+            </button>
+          )}
+        </div>
+      ) : (
+        <EntryList entries={entries} />
+      )}
     </div>
   );
 }
