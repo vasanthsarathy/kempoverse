@@ -12,23 +12,42 @@ Kempoverse is a mobile-first web application for organizing and accessing karate
 
 ## ✨ Features
 
-### Current (Phase 1-3a)
+### Current Features (Phases 1-4)
 
 - **📚 Content Management**
   - Browse all karate entries in a responsive grid layout
-  - View detailed entry pages with markdown-formatted content
+  - View detailed entry pages with proper markdown rendering
   - Category-based organization (techniques, forms, self-defense, history, basics)
   - Tag-based categorization
   - Belt rank indicators
+  - Logo branding in header
 
 - **🔐 Authentication & CRUD**
   - Token-based authentication (JWT-style)
+  - Full login/logout flow with UI
   - Create, read, update, and delete entries
-  - Protected API endpoints for write operations
+  - Protected API endpoints and routes
+  - Entry creation and editing forms
   - 24-hour token expiration
 
-- **🔍 Database**
-  - Full-text search capability (SQLite FTS5)
+- **🔍 Search & Filtering**
+  - Full-text search using SQLite FTS5
+  - Real-time search with debouncing
+  - Filter by category dropdown
+  - Filter by tags (fuzzy matching)
+  - Filter by belt ranks
+  - Combined multi-filter support
+  - Clear filters functionality
+
+- **📝 Enhanced Content Display**
+  - Advanced markdown parsing with `marked` library
+  - Support for headings, lists, code blocks
+  - Bold, italic, and inline code formatting
+  - Links and blockquotes
+  - Clean, readable typography
+
+- **🗄 Database**
+  - SQLite D1 with FTS5 full-text search
   - Efficient indexing on categories, tags, and subcategories
   - Automatic timestamp tracking
   - UUID-based entry identification
@@ -38,15 +57,17 @@ Kempoverse is a mobile-first web application for organizing and accessing karate
   - Fast page loads with Cloudflare global CDN
   - Clean, modern card-based UI
   - Category-specific color coding
-  - Loading and error states
+  - Smooth loading and error states
+  - Persistent search focus
+  - No-results messaging
 
-### Coming Soon (Phase 3b-4)
+### Future Enhancements
 
-- Login UI and authentication flow
-- Entry creation and editing forms
-- Search and filtering interface
-- Advanced markdown rendering
-- Image/video reference support
+- Image/video upload and embedding
+- Export functionality (PDF, markdown)
+- User preferences and settings
+- Training session tracking
+- Belt progression tracking
 
 ## 🛠 Tech Stack
 
@@ -142,6 +163,130 @@ There's currently a limitation with `wrangler pages dev` where local D1 database
 **Workaround:** Deploy to Cloudflare Pages for testing:
 ```bash
 npm run deploy
+```
+
+### Development Workflow
+
+This project follows a structured workflow for all feature development and bug fixes:
+
+#### 1. Plan Your Work
+Before making changes, create a clear plan:
+- Define the feature or fix you're implementing
+- List the files that need to be changed
+- Identify any new dependencies required
+- Consider edge cases and potential issues
+
+#### 2. Develop & Test Locally
+Make your changes iteratively:
+```bash
+# Run the dev server to see changes in real-time
+npm run dev
+
+# Or run full-stack with Wrangler
+npm run build && npm run dev:wrangler
+```
+
+Test your changes thoroughly in the browser before committing.
+
+#### 3. Build & Verify
+Ensure everything compiles without errors:
+```bash
+npm run build
+```
+
+This runs TypeScript type checking and Vite build. Fix any errors before proceeding.
+
+#### 4. Commit Your Changes
+Stage and commit your work with descriptive messages:
+```bash
+# Stage all changes
+git add -A
+
+# Check what you're committing
+git status
+
+# Commit with a clear, descriptive message
+git commit -m "Add feature: brief description
+
+Detailed explanation of what changed and why.
+Include any important implementation details."
+```
+
+**Commit Message Best Practices:**
+- First line: Brief summary (50 chars or less)
+- Blank line
+- Detailed description of changes
+- Reference any related issues
+
+#### 5. Push to GitHub
+Back up your code to the remote repository:
+```bash
+git push origin main
+```
+
+This ensures your work is safely backed up and visible to collaborators.
+
+#### 6. Deploy to Production
+Deploy your changes to Cloudflare Pages:
+```bash
+npm run deploy
+```
+
+This will:
+- Build the production bundle
+- Upload to Cloudflare Pages
+- Deploy to https://kempoverse.pages.dev
+
+**Verify the deployment:**
+- Visit the deployed URL
+- Test the new features in production
+- Check that everything works as expected
+
+#### Complete Workflow Example
+
+Here's a complete workflow for adding a new feature:
+
+```bash
+# 1. Make your changes in your editor
+
+# 2. Test locally
+npm run dev
+
+# 3. Build and verify
+npm run build
+
+# 4. Commit
+git add -A
+git commit -m "Add search debouncing for better UX
+
+- Separate search input from query state
+- Add 300ms debounce delay
+- Prevent focus loss while typing
+- Improve performance with fewer API calls"
+
+# 5. Push to GitHub
+git push origin main
+
+# 6. Deploy to production
+npm run deploy
+```
+
+#### Quick Commands for Common Tasks
+
+```bash
+# Full workflow in one line (after making changes)
+npm run build && git add -A && git commit -m "Your message" && git push && npm run deploy
+
+# Check current branch and status
+git status
+git log --oneline -5
+
+# Create a new feature branch (optional)
+git checkout -b feature/your-feature-name
+
+# Merge feature back to main
+git checkout main
+git merge feature/your-feature-name
 ```
 
 ## 📝 Environment Variables
