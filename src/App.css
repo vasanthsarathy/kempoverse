@@ -83,8 +83,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
+}
+
+.logo-image {
+  height: 48px;
+  width: auto;
 }
 
 .logo-dot {

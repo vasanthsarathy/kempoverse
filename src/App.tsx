@@ -17,7 +17,7 @@ function AppContent() {
         <div className="header-content">
           <Link to="/" className="logo-link">
             <div className="logo-mark">
-              <span className="logo-dot">●</span>
+              <img src="/logo-kempoverse.svg" alt="Kempoverse Logo" className="logo-image" />
               <h1 className="logo-text">KEMPOVERSE</h1>
             </div>
           </Link>
