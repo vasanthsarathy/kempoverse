@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { marked } from 'marked';
 import { fetchEntry, deleteEntry } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 import type { Entry } from '../types';
@@ -13,6 +14,12 @@ function EntryDetail() {
   const [deleting, setDeleting] = useState(false);
   const { isAuthenticated, token } = useAuth();
   const navigate = useNavigate();
+
+  // Parse markdown content
+  const parsedContent = useMemo(() => {
+    if (!entry) return '';
+    return marked.parse(entry.content_md);
+  }, [entry]);
 
   const handleDelete = async () => {
     if (!id || !token) return;
@@ -146,7 +153,7 @@ function EntryDetail() {
         <div
           className="markdown-content"
           dangerouslySetInnerHTML={{
-            __html: entry.content_md.replace(/\n/g, '<br>'),
+            __html: parsedContent,
           }}
         />
 

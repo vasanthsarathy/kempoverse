@@ -12,8 +12,30 @@ function getAuthHeaders(token: string): HeadersInit {
   };
 }
 
-export async function fetchEntries(): Promise<Entry[]> {
-  const response = await fetch(`${API_BASE}/entries`);
+export interface FetchEntriesParams {
+  search?: string;
+  category?: string;
+  tag?: string;
+  belt?: string;
+}
+
+export async function fetchEntries(params?: FetchEntriesParams): Promise<Entry[]> {
+  const url = new URL(`${API_BASE}/entries`, window.location.origin);
+
+  if (params?.search) {
+    url.searchParams.set('q', params.search);
+  }
+  if (params?.category) {
+    url.searchParams.set('category', params.category);
+  }
+  if (params?.tag) {
+    url.searchParams.set('tag', params.tag);
+  }
+  if (params?.belt) {
+    url.searchParams.set('belt', params.belt);
+  }
+
+  const response = await fetch(url.toString());
   if (!response.ok) {
     throw new Error('Failed to fetch entries');
   }

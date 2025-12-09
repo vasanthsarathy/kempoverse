@@ -7,18 +7,63 @@ import { requireAuth } from '../../utils/auth';
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   try {
     const { DB } = context.env;
+    const url = new URL(context.request.url);
 
-    // Query all entries, ordered by updated_at (most recent first)
-    const { results } = await DB.prepare(`
-      SELECT
-        id, title, category, subcategory, belts, tags,
-        content_md, reference_urls, created_at, updated_at
-      FROM entries
-      ORDER BY updated_at DESC
-    `).all<EntryRow>();
+    // Get query parameters
+    const searchQuery = url.searchParams.get('q') || url.searchParams.get('search');
+    const categoryFilter = url.searchParams.get('category');
+    const tagFilter = url.searchParams.get('tag');
+    const beltFilter = url.searchParams.get('belt');
 
-    // Convert DB rows to Entry objects
-    const entries: Entry[] = results.map(rowToEntry);
+    let query = '';
+    let bindings: any[] = [];
+
+    // If search query is provided, use FTS5
+    if (searchQuery) {
+      query = `
+        SELECT e.id, e.title, e.category, e.subcategory, e.belts, e.tags,
+               e.content_md, e.reference_urls, e.created_at, e.updated_at
+        FROM entries e
+        INNER JOIN entries_fts fts ON e.id = fts.id
+        WHERE entries_fts MATCH ?
+        ORDER BY rank
+      `;
+      bindings.push(searchQuery);
+    } else {
+      // Regular query without search
+      query = `
+        SELECT id, title, category, subcategory, belts, tags,
+               content_md, reference_urls, created_at, updated_at
+        FROM entries
+        WHERE 1=1
+      `;
+
+      // Add category filter
+      if (categoryFilter) {
+        query += ' AND category = ?';
+        bindings.push(categoryFilter);
+      }
+
+      query += ' ORDER BY updated_at DESC';
+    }
+
+    const { results } = await DB.prepare(query).bind(...bindings).all<EntryRow>();
+
+    // Convert DB rows to Entry objects and apply client-side filters
+    let entries: Entry[] = results.map(rowToEntry);
+
+    // Client-side filtering for tags and belts (since they're JSON arrays)
+    if (tagFilter) {
+      entries = entries.filter(entry =>
+        entry.tags.some(tag => tag.toLowerCase().includes(tagFilter.toLowerCase()))
+      );
+    }
+
+    if (beltFilter) {
+      entries = entries.filter(entry =>
+        entry.belts?.some(belt => belt.toLowerCase().includes(beltFilter.toLowerCase()))
+      );
+    }
 
     return jsonResponse<{ entries: Entry[]; total: number }>({
       data: {
