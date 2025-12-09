@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Home from './pages/Home';
@@ -6,37 +7,49 @@ import CreateEntry from './pages/CreateEntry';
 import EditEntry from './pages/EditEntry';
 import EntryDetail from './components/EntryDetail';
 import ProtectedRoute from './components/ProtectedRoute';
+import Sidebar from './components/Sidebar';
 import './App.css';
 
 function AppContent() {
   const { isAuthenticated, logout } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="app">
-      <header className="app-header">
-        <div className="header-content">
-          <Link to="/" className="logo-link">
-            <div className="logo-mark">
-              <img src="/logo-kempoverse.svg" alt="Kempoverse Logo" className="logo-image" />
-              <h1 className="logo-text">KEMPOVERSE</h1>
-            </div>
-          </Link>
-          <p className="tagline">Your personal universe of kempo knowledge</p>
-        </div>
-        <div className="header-actions">
-          {isAuthenticated ? (
-            <button onClick={logout} className="auth-button">
-              Logout
-            </button>
-          ) : (
-            <Link to="/login" className="auth-button">
-              Login
-            </Link>
-          )}
-        </div>
-      </header>
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="app-main">
+      <div className="app-content">
+        <header className="app-header">
+          <button
+            className="hamburger-button"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
+          <div className="header-content">
+            <Link to="/" className="logo-link">
+              <div className="logo-mark">
+                <img src="/logo-kempoverse.svg" alt="Kempoverse Logo" className="logo-image" />
+                <h1 className="logo-text">KEMPOVERSE</h1>
+              </div>
+            </Link>
+            <p className="tagline">Your personal universe of kempo knowledge</p>
+          </div>
+          <div className="header-actions">
+            {isAuthenticated ? (
+              <button onClick={logout} className="auth-button">
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" className="auth-button">
+                Login
+              </Link>
+            )}
+          </div>
+        </header>
+
+        <main className="app-main">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/entry/:id" element={<EntryDetail />} />
@@ -58,11 +71,12 @@ function AppContent() {
             }
           />
         </Routes>
-      </main>
+        </main>
 
-      <footer className="app-footer">
-        <p>Kempoverse · Private training notes</p>
-      </footer>
+        <footer className="app-footer">
+          <p>Kempoverse · Private training notes</p>
+        </footer>
+      </div>
     </div>
   );
 }
