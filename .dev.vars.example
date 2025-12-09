@@ -1,0 +1,5 @@
+# Example environment variables for local development
+# Copy this to .dev.vars and set your own values
+
+AUTH_PASSWORD=your-password-here
+AUTH_SECRET=your-super-secret-key-here

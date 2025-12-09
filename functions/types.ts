@@ -3,6 +3,8 @@ import type { Entry } from '../src/types';
 // Cloudflare Pages Functions environment
 export interface Env {
   DB: D1Database;
+  AUTH_SECRET: string;
+  AUTH_PASSWORD: string;
 }
 
 // D1 row result (from database, before parsing)
@@ -44,8 +46,8 @@ export interface ApiResponse<T> {
 // CORS headers for all API responses
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json',
 };
 
