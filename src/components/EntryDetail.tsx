@@ -6,6 +6,26 @@ import { useAuth } from '../contexts/AuthContext';
 import type { Entry } from '../types';
 import './EntryDetail.css';
 
+// Extract YouTube video ID from URL
+function getYouTubeVideoId(url: string): string | null {
+  if (!url) return null;
+
+  // Handle various YouTube URL formats
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+    /youtube\.com\/embed\/([^&\n?#]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
+}
+
 function EntryDetail() {
   const { id } = useParams<{ id: string }>();
   const [entry, setEntry] = useState<Entry | null>(null);
@@ -20,6 +40,12 @@ function EntryDetail() {
     if (!entry) return '';
     return marked.parse(entry.content_md);
   }, [entry]);
+
+  // Extract YouTube video ID
+  const youtubeVideoId = useMemo(() => {
+    if (!entry?.video_url) return null;
+    return getYouTubeVideoId(entry.video_url);
+  }, [entry?.video_url]);
 
   const handleDelete = async () => {
     if (!id || !token) return;
@@ -149,6 +175,20 @@ function EntryDetail() {
             </div>
           )}
         </header>
+
+        {youtubeVideoId && (
+          <div className="video-container">
+            <iframe
+              width="100%"
+              height="100%"
+              src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        )}
 
         <div
           className="markdown-content"

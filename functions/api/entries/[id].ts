@@ -23,7 +23,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const result = await DB.prepare(`
       SELECT
         id, title, category, subcategory, belts, tags,
-        content_md, reference_urls, created_at, updated_at
+        content_md, reference_urls, video_url, created_at, updated_at
       FROM entries
       WHERE id = ?
     `)
@@ -74,7 +74,7 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
 
     // Validate at least one field to update
     if (!body.title && !body.category && !body.tags && !body.content_md &&
-        !body.subcategory && !body.belts && !body.references) {
+        !body.subcategory && !body.belts && !body.references && body.video_url === undefined) {
       return jsonResponse<null>({ error: 'No fields to update' }, 400);
     }
 
@@ -110,6 +110,10 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
       updates.push('reference_urls = ?');
       values.push(body.references.length > 0 ? JSON.stringify(body.references) : null);
     }
+    if (body.video_url !== undefined) {
+      updates.push('video_url = ?');
+      values.push(body.video_url || null);
+    }
 
     // Always update updated_at
     const now = new Date().toISOString();
@@ -128,7 +132,7 @@ export const onRequestPut: PagesFunction<Env> = async (context) => {
     // Fetch and return updated entry
     const result = await DB.prepare(`
       SELECT id, title, category, subcategory, belts, tags,
-        content_md, reference_urls, created_at, updated_at
+        content_md, reference_urls, video_url, created_at, updated_at
       FROM entries
       WHERE id = ?
     `).bind(id).first<EntryRow>();

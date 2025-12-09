@@ -18,6 +18,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
   const [tagsText, setTagsText] = useState(existingEntry?.tags.join(', ') || '');
   const [content, setContent] = useState(existingEntry?.content_md || '');
   const [referencesText, setReferencesText] = useState(existingEntry?.references.join('\n') || '');
+  const [videoUrl, setVideoUrl] = useState(existingEntry?.video_url || '');
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,6 +53,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
         tags,
         content_md: content,
         references,
+        video_url: videoUrl || undefined,
       };
 
       if (mode === 'create') {
@@ -167,6 +169,19 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               disabled={loading}
             />
             <span className="help-text">One URL per line</span>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="video_url">Video URL (YouTube)</label>
+            <input
+              type="url"
+              id="video_url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://youtube.com/watch?v=..."
+              disabled={loading}
+            />
+            <span className="help-text">Paste a YouTube URL to embed video</span>
           </div>
 
           {error && <div className="error-message">{error}</div>}

@@ -17,6 +17,7 @@ export interface Entry {
   tags: string[]; // ["haymaker", "club-defense", "takedown"]
   content_md: string; // Markdown text
   references: string[]; // URLs (YouTube, docs, etc.)
+  video_url?: string; // YouTube video URL
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }

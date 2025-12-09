@@ -17,6 +17,7 @@ export interface EntryRow {
   tags: string; // JSON string
   content_md: string;
   reference_urls: string | null; // JSON string
+  video_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -32,6 +33,7 @@ export function rowToEntry(row: EntryRow): Entry {
     tags: JSON.parse(row.tags),
     content_md: row.content_md,
     references: row.reference_urls ? JSON.parse(row.reference_urls) : [],
+    video_url: row.video_url || undefined,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
