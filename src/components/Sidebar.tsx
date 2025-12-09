@@ -23,6 +23,9 @@ const CATEGORY_LABELS: Record<Category, string> = {
   basic: 'Basics',
 };
 
+// Define category display order
+const CATEGORY_ORDER: Category[] = ['basic', 'technique', 'form', 'self_defense', 'history'];
+
 function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +62,15 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 
     return tree;
   }, {} as CategoryTree);
+
+  // Sort entries within each subcategory alphabetically by title
+  Object.values(categoryTree).forEach(subcategories => {
+    Object.keys(subcategories).forEach(subcategory => {
+      subcategories[subcategory].sort((a, b) =>
+        a.title.localeCompare(b.title, undefined, { sensitivity: 'base' })
+      );
+    });
+  });
 
   const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -114,7 +126,9 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
         {Object.keys(categoryTree).length === 0 ? (
           <p className="sidebar-empty">No entries found</p>
         ) : (
-          Object.entries(categoryTree).map(([category, subcategories]) => {
+          CATEGORY_ORDER.filter(cat => categoryTree[cat])
+            .map(category => {
+            const subcategories = categoryTree[category];
             const isExpanded = expandedCategories.has(category);
             const categoryLabel = CATEGORY_LABELS[category as Category] || category;
             const totalEntries = Object.values(subcategories).reduce(
@@ -136,7 +150,9 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 
                 {isExpanded && (
                   <div className="subcategory-list">
-                    {Object.entries(subcategories).map(([subcategory, subcatEntries]) => {
+                    {Object.entries(subcategories)
+                      .sort(([a], [b]) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+                      .map(([subcategory, subcatEntries]) => {
                       const subKey = `${category}-${subcategory}`;
                       const isSubExpanded = expandedSubcategories.has(subKey);
 
