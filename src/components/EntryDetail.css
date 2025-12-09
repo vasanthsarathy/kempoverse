@@ -1,15 +1,15 @@
 .entry-detail {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 0.75rem;
 }
 
 .entry-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  gap: 1rem;
+  margin-bottom: 0.75rem;
+  gap: 0.75rem;
 }
 
 .back-link {
@@ -17,6 +17,7 @@
   color: #d32f2f;
   text-decoration: none;
   font-weight: 500;
+  font-size: 12px;
   transition: color 0.2s;
 }
 
@@ -26,75 +27,81 @@
 
 .admin-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .edit-button,
 .delete-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid;
+  border-radius: 2px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .edit-button {
-  background: #4a90e2;
+  background: #333;
   color: white;
+  border-color: #333;
 }
 
 .edit-button:hover {
-  background: #357abd;
+  background: #000;
+  border-color: #000;
 }
 
 .delete-button {
   background: #d32f2f;
   color: white;
+  border-color: #d32f2f;
 }
 
 .delete-button:hover:not(:disabled) {
   background: #9a0007;
+  border-color: #9a0007;
 }
 
 .delete-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .entry-content {
   background: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 2rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  padding: 1rem;
 }
 
 .entry-detail-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 2px solid #f5f5f5;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .title-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .entry-detail-header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 18px;
   color: #1a1a1a;
   flex: 1;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .subcategory {
-  margin: 0 0 1rem 0;
-  font-size: 1.125rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 12px;
   color: #666;
 }
 
@@ -102,57 +109,62 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .belt-list strong {
-  font-size: 0.875rem;
-  color: #444;
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .markdown-content {
-  line-height: 1.8;
+  line-height: 1.6;
   color: #333;
-  font-size: 1rem;
+  font-size: 13px;
 }
 
 .markdown-content h1 {
-  font-size: 1.75rem;
-  margin: 2rem 0 1rem 0;
+  font-size: 16px;
+  margin: 1.25rem 0 0.75rem 0;
   color: #1a1a1a;
+  font-weight: 600;
 }
 
 .markdown-content h2 {
-  font-size: 1.5rem;
-  margin: 1.75rem 0 0.875rem 0;
+  font-size: 14px;
+  margin: 1rem 0 0.5rem 0;
   color: #1a1a1a;
+  font-weight: 600;
 }
 
 .markdown-content h3 {
-  font-size: 1.25rem;
-  margin: 1.5rem 0 0.75rem 0;
+  font-size: 13px;
+  margin: 0.875rem 0 0.5rem 0;
   color: #1a1a1a;
+  font-weight: 600;
 }
 
 .markdown-content p {
-  margin: 0.75rem 0;
+  margin: 0.5rem 0;
 }
 
 .markdown-content ul,
 .markdown-content ol {
-  margin: 0.75rem 0;
-  padding-left: 2rem;
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
 }
 
 .markdown-content li {
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
 }
 
 .markdown-content strong {
@@ -160,16 +172,40 @@
   font-weight: 600;
 }
 
+.markdown-content code {
+  background: #f5f5f5;
+  padding: 0.125rem 0.25rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.markdown-content pre {
+  background: #f5f5f5;
+  padding: 0.75rem;
+  border-radius: 2px;
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+}
+
+.markdown-content pre code {
+  background: none;
+  padding: 0;
+}
+
 .references {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 2px solid #f5f5f5;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
 }
 
 .references h2 {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+  font-size: 13px;
+  margin-bottom: 0.5rem;
   color: #1a1a1a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .references ul {
@@ -179,13 +215,14 @@
 }
 
 .references li {
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
 }
 
 .reference-link {
   color: #1565c0;
   text-decoration: none;
   word-break: break-all;
+  font-size: 12px;
 }
 
 .reference-link:hover {
@@ -193,29 +230,29 @@
 }
 
 .entry-meta {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
   border-top: 1px solid #e0e0e0;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .meta-text {
   margin: 0;
-  font-size: 0.875rem;
-  color: #666;
+  font-size: 11px;
+  color: #999;
 }
 
 .loading-state,
 .error-state {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: 3rem 1.5rem;
 }
 
 .loading-state {
   color: #666;
-  font-size: 1.125rem;
+  font-size: 13px;
 }
 
 .error-state {
@@ -223,21 +260,21 @@
 }
 
 .error-state p {
-  margin-bottom: 1.5rem;
-  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
 }
 
 @media (max-width: 768px) {
   .entry-detail {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .entry-content {
-    padding: 1.5rem;
+    padding: 0.75rem;
   }
 
   .entry-detail-header h1 {
-    font-size: 1.5rem;
+    font-size: 16px;
   }
 
   .title-row {
