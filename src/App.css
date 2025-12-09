@@ -20,9 +20,9 @@
 }
 
 body {
-  font-family: var(--font-mono);
-  background-color: var(--ink-black);
-  color: var(--paper-white);
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f5f5f5;
+  color: #1a1a1a;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,16 +31,21 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--spacing-md);
+  padding: 0;
 }
 
 .app-header {
   text-align: center;
-  padding: var(--spacing-xl) 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: var(--spacing-lg);
+  padding: 2rem 1rem;
+  background: #ffffff;
+  border-bottom: 2px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo-mark {
@@ -52,7 +57,7 @@ body {
 }
 
 .logo-dot {
-  color: var(--deep-red);
+  color: #d32f2f;
   font-size: 24px;
   line-height: 1;
 }
@@ -62,21 +67,16 @@ body {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--paper-white);
+  color: #1a1a1a;
 }
 
 .tagline {
-  font-size: 12px;
-  color: var(--muted-gray);
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+  color: #666;
 }
 
 .app-main {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .placeholder-content {
@@ -108,13 +108,11 @@ body {
 
 .app-footer {
   text-align: center;
-  padding: var(--spacing-lg) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  margin-top: var(--spacing-lg);
-  font-size: 12px;
-  color: var(--muted-gray);
-  text-transform: lowercase;
-  letter-spacing: 0.05em;
+  padding: 2rem;
+  background: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+  color: #666;
 }
 
 @media (min-width: 768px) {

@@ -1,30 +1,34 @@
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import EntryDetail from './components/EntryDetail';
 import './App.css';
 
 function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <div className="logo-mark">
-          <span className="logo-dot">●</span>
-          <h1 className="logo-text">KEMPOVERSE</h1>
-        </div>
-        <p className="tagline">Your personal universe of kempo knowledge</p>
-      </header>
+    <BrowserRouter>
+      <div className="app">
+        <header className="app-header">
+          <Link to="/" className="logo-link">
+            <div className="logo-mark">
+              <span className="logo-dot">●</span>
+              <h1 className="logo-text">KEMPOVERSE</h1>
+            </div>
+          </Link>
+          <p className="tagline">Your personal universe of kempo knowledge</p>
+        </header>
 
-      <main className="app-main">
-        <div className="placeholder-content">
-          <h2>Welcome to Kempoverse</h2>
-          <p>Phase 0: Setup complete</p>
-          <p className="status-text">
-            Ready for Phase 1: Backend & API implementation
-          </p>
-        </div>
-      </main>
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/entry/:id" element={<EntryDetail />} />
+          </Routes>
+        </main>
 
-      <footer className="app-footer">
-        <p>Kempoverse · Private training notes</p>
-      </footer>
-    </div>
+        <footer className="app-footer">
+          <p>Kempoverse · Private training notes</p>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,199 @@
+.entry-detail {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #d32f2f;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #9a0007;
+}
+
+.entry-content {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.entry-detail-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.entry-detail-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a1a1a;
+  flex: 1;
+}
+
+.subcategory {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  color: #666;
+}
+
+.belt-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.belt-list strong {
+  font-size: 0.875rem;
+  color: #444;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.markdown-content {
+  line-height: 1.8;
+  color: #333;
+  font-size: 1rem;
+}
+
+.markdown-content h1 {
+  font-size: 1.75rem;
+  margin: 2rem 0 1rem 0;
+  color: #1a1a1a;
+}
+
+.markdown-content h2 {
+  font-size: 1.5rem;
+  margin: 1.75rem 0 0.875rem 0;
+  color: #1a1a1a;
+}
+
+.markdown-content h3 {
+  font-size: 1.25rem;
+  margin: 1.5rem 0 0.75rem 0;
+  color: #1a1a1a;
+}
+
+.markdown-content p {
+  margin: 0.75rem 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0.75rem 0;
+  padding-left: 2rem;
+}
+
+.markdown-content li {
+  margin: 0.5rem 0;
+}
+
+.markdown-content strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.references {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f5f5f5;
+}
+
+.references h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.references ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.references li {
+  margin: 0.5rem 0;
+}
+
+.reference-link {
+  color: #1565c0;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.reference-link:hover {
+  text-decoration: underline;
+}
+
+.entry-meta {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.meta-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loading-state {
+  color: #666;
+  font-size: 1.125rem;
+}
+
+.error-state {
+  color: #d32f2f;
+}
+
+.error-state p {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+}
+
+@media (max-width: 768px) {
+  .entry-detail {
+    padding: 1rem;
+  }
+
+  .entry-content {
+    padding: 1.5rem;
+  }
+
+  .entry-detail-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .title-row {
+    flex-direction: column;
+  }
+}

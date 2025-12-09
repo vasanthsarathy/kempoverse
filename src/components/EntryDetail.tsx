@@ -1,0 +1,149 @@
+import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { fetchEntry } from '../utils/api';
+import type { Entry } from '../types';
+import './EntryDetail.css';
+
+function EntryDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [entry, setEntry] = useState<Entry | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      setError('No entry ID provided');
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    fetchEntry(id)
+      .then((data) => {
+        setEntry(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to load entry');
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="entry-detail">
+        <div className="loading-state">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="entry-detail">
+        <div className="error-state">
+          <p>{error}</p>
+          <Link to="/" className="back-link">
+            ← Back to entries
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!entry) {
+    return (
+      <div className="entry-detail">
+        <div className="error-state">
+          <p>Entry not found</p>
+          <Link to="/" className="back-link">
+            ← Back to entries
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="entry-detail">
+      <Link to="/" className="back-link">
+        ← Back to entries
+      </Link>
+
+      <article className="entry-content">
+        <header className="entry-detail-header">
+          <div className="title-row">
+            <h1>{entry.title}</h1>
+            <span className={`category-badge category-${entry.category}`}>
+              {entry.category.replace('_', ' ')}
+            </span>
+          </div>
+
+          {entry.subcategory && (
+            <p className="subcategory">{entry.subcategory}</p>
+          )}
+
+          {entry.belts && entry.belts.length > 0 && (
+            <div className="belt-list">
+              <strong>Belts:</strong>
+              {entry.belts.map((belt, index) => (
+                <span key={index} className="belt-tag">
+                  {belt}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {entry.tags.length > 0 && (
+            <div className="tag-list">
+              {entry.tags.map((tag, index) => (
+                <span key={index} className="tag">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <div
+          className="markdown-content"
+          dangerouslySetInnerHTML={{
+            __html: entry.content_md.replace(/\n/g, '<br>'),
+          }}
+        />
+
+        {entry.references.length > 0 && (
+          <section className="references">
+            <h2>References</h2>
+            <ul>
+              {entry.references.map((ref, index) => (
+                <li key={index}>
+                  <a
+                    href={ref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="reference-link"
+                  >
+                    {ref}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <footer className="entry-meta">
+          <p className="meta-text">
+            Created: {new Date(entry.created_at).toLocaleDateString()}
+          </p>
+          <p className="meta-text">
+            Updated: {new Date(entry.updated_at).toLocaleDateString()}
+          </p>
+        </footer>
+      </article>
+    </div>
+  );
+}
+
+export default EntryDetail;
