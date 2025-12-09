@@ -13,10 +13,20 @@ function Home() {
   const { isAuthenticated } = useAuth();
 
   // Filter states
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // User's input
+  const [searchQuery, setSearchQuery] = useState(''); // Debounced search query
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [tagFilter, setTagFilter] = useState('');
   const [beltFilter, setBeltFilter] = useState('');
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+    }, 300); // Wait 300ms after user stops typing
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const loadEntries = useCallback(async () => {
     setLoading(true);
@@ -67,13 +77,14 @@ function Home() {
   }
 
   const clearFilters = () => {
+    setSearchInput('');
     setSearchQuery('');
     setCategoryFilter('');
     setTagFilter('');
     setBeltFilter('');
   };
 
-  const hasActiveFilters = searchQuery || categoryFilter || tagFilter || beltFilter;
+  const hasActiveFilters = searchInput || categoryFilter || tagFilter || beltFilter;
 
   return (
     <div className="home">
@@ -95,8 +106,8 @@ function Home() {
           <input
             type="text"
             placeholder="Search entries..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="search-input"
           />
         </div>
