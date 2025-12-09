@@ -126,3 +126,18 @@ export async function deleteEntry(id: string, token: string): Promise<void> {
     throw new Error(error.error || 'Failed to delete entry');
   }
 }
+
+/**
+ * Extract all unique tags from all entries
+ * Returns a sorted array of unique tags
+ */
+export async function getAllTags(): Promise<string[]> {
+  const entries = await fetchEntries();
+  const tagSet = new Set<string>();
+
+  entries.forEach(entry => {
+    entry.tags.forEach(tag => tagSet.add(tag));
+  });
+
+  return Array.from(tagSet).sort();
+}

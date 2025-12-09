@@ -1,7 +1,7 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { createEntry, updateEntry } from '../utils/api';
+import { createEntry, updateEntry, getAllTags } from '../utils/api';
 import type { Entry, Category } from '../types';
 import './EntryForm.css';
 
@@ -23,8 +23,77 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Tag autocomplete state
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const tagsInputRef = useRef<HTMLInputElement>(null);
+
   const { token } = useAuth();
   const navigate = useNavigate();
+
+  // Fetch all existing tags on mount
+  useEffect(() => {
+    getAllTags()
+      .then(tags => setAllTags(tags))
+      .catch(err => console.error('Failed to load tags:', err));
+  }, []);
+
+  // Update tag suggestions when tagsText changes
+  const handleTagsChange = (value: string) => {
+    setTagsText(value);
+
+    // Get the current word being typed (after last comma)
+    const lastCommaIndex = value.lastIndexOf(',');
+    const currentTag = value.slice(lastCommaIndex + 1).trim().toLowerCase();
+
+    if (currentTag.length > 0) {
+      // Filter existing tags that match current input
+      const matches = allTags.filter(tag =>
+        tag.toLowerCase().includes(currentTag) &&
+        !value.split(',').map(t => t.trim()).includes(tag)
+      );
+      setTagSuggestions(matches);
+      setShowSuggestions(matches.length > 0);
+      setSelectedSuggestionIndex(-1);
+    } else {
+      setShowSuggestions(false);
+      setTagSuggestions([]);
+    }
+  };
+
+  // Handle selecting a suggestion
+  const selectSuggestion = (tag: string) => {
+    const lastCommaIndex = tagsText.lastIndexOf(',');
+    const newTagsText = lastCommaIndex >= 0
+      ? tagsText.slice(0, lastCommaIndex + 1) + ' ' + tag + ', '
+      : tag + ', ';
+    setTagsText(newTagsText);
+    setShowSuggestions(false);
+    setTagSuggestions([]);
+    tagsInputRef.current?.focus();
+  };
+
+  // Handle keyboard navigation in suggestions
+  const handleTagsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedSuggestionIndex(prev =>
+        prev < tagSuggestions.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedSuggestionIndex(prev => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+      e.preventDefault();
+      selectSuggestion(tagSuggestions[selectedSuggestionIndex]);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -131,18 +200,36 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
             <span className="help-text">Comma-separated list</span>
           </div>
 
-          <div className="form-group">
+          <div className="form-group tag-input-wrapper">
             <label htmlFor="tags">Tags *</label>
             <input
               type="text"
               id="tags"
+              ref={tagsInputRef}
               value={tagsText}
-              onChange={(e) => setTagsText(e.target.value)}
+              onChange={(e) => handleTagsChange(e.target.value)}
+              onKeyDown={handleTagsKeyDown}
+              onFocus={() => handleTagsChange(tagsText)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
               placeholder="e.g., haymaker, outside-defense, takedown"
               required
               disabled={loading}
+              autoComplete="off"
             />
-            <span className="help-text">Comma-separated list (at least one required)</span>
+            {showSuggestions && tagSuggestions.length > 0 && (
+              <ul className="tag-suggestions">
+                {tagSuggestions.map((tag, index) => (
+                  <li
+                    key={tag}
+                    className={index === selectedSuggestionIndex ? 'selected' : ''}
+                    onClick={() => selectSuggestion(tag)}
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <span className="help-text">Comma-separated list (at least one required) - start typing for suggestions</span>
           </div>
 
           <div className="form-group">
