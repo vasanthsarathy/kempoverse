@@ -7,6 +7,8 @@ import type { Entry } from '../types';
 import './Home.css';
 
 function Home() {
+  console.log('Home component rendered!');
+
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
