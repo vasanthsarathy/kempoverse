@@ -138,24 +138,37 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
 
   // Handle paste in content textarea (for images)
   const handleContentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    console.log('Paste event fired!');
+
     const items = e.clipboardData?.items;
-    if (!items) return;
+    console.log('Clipboard items:', items);
+
+    if (!items) {
+      console.log('No clipboard items found');
+      return;
+    }
 
     const files: File[] = [];
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
+      console.log(`Item ${i}:`, { kind: item.kind, type: item.type });
+
       if (item.kind === 'file' && item.type.startsWith('image/')) {
         const file = item.getAsFile();
+        console.log('Image file found:', file);
         if (file) {
           files.push(file);
         }
       }
     }
 
+    console.log('Total image files found:', files.length);
+
     // If images found, prevent default paste and add to upload list
     if (files.length > 0) {
       e.preventDefault();
       addImageFiles(files);
+      console.log('Images added to upload list');
     }
     // Otherwise let text paste normally
   };
