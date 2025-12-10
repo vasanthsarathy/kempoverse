@@ -19,12 +19,12 @@ const CATEGORY_LABELS: Record<Category, string> = {
   technique: 'Techniques',
   form: 'Forms',
   self_defense: 'Self Defense',
-  history: 'History',
+  knowledge: 'Knowledge',
   basic: 'Basics',
 };
 
 // Define category display order
-const CATEGORY_ORDER: Category[] = ['basic', 'technique', 'form', 'self_defense', 'history'];
+const CATEGORY_ORDER: Category[] = ['basic', 'technique', 'form', 'self_defense', 'knowledge'];
 
 function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [entries, setEntries] = useState<Entry[]>([]);

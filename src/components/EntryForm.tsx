@@ -170,7 +170,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               <option value="technique">Technique</option>
               <option value="form">Form</option>
               <option value="self_defense">Self Defense</option>
-              <option value="history">History</option>
+              <option value="knowledge">Knowledge</option>
               <option value="basic">Basic</option>
             </select>
           </div>

@@ -2,7 +2,7 @@
 // Based on design-spec.md
 
 export type Category =
-  | 'history'
+  | 'knowledge'
   | 'technique'
   | 'form'
   | 'self_defense'

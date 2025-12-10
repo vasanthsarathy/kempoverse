@@ -36,7 +36,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Core entity is an **Entry** with the following structure:
 
 ```typescript
-type Category = "history" | "technique" | "form" | "self_defense" | "basic";
+type Category = "knowledge" | "technique" | "form" | "self_defense" | "basic";
 
 interface Entry {
   id: string;                 // uuid
