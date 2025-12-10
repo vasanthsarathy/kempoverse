@@ -49,6 +49,30 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
       .catch(err => console.error('Failed to load tags:', err));
   }, []);
 
+  // Global paste listener for debugging
+  useEffect(() => {
+    const globalPasteHandler = (e: ClipboardEvent) => {
+      console.log('GLOBAL PASTE EVENT DETECTED!');
+      console.log('Target:', e.target);
+      console.log('Clipboard data:', e.clipboardData);
+
+      const items = e.clipboardData?.items;
+      if (items) {
+        console.log('Number of items:', items.length);
+        for (let i = 0; i < items.length; i++) {
+          console.log(`Item ${i}:`, items[i].kind, items[i].type);
+        }
+      }
+    };
+
+    document.addEventListener('paste', globalPasteHandler);
+    console.log('Global paste listener attached!');
+
+    return () => {
+      document.removeEventListener('paste', globalPasteHandler);
+    };
+  }, []);
+
   // Update tag suggestions when tagsText changes
   const handleTagsChange = (value: string) => {
     setTagsText(value);
