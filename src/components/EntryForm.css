@@ -162,6 +162,123 @@
   cursor: not-allowed;
 }
 
+/* Image upload UI styles */
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.image-preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(211, 47, 47, 0.9);
+  color: white;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.remove-image-button:hover:not(:disabled) {
+  background: rgba(154, 0, 7, 1);
+}
+
+.remove-image-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* File list for pending uploads */
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-file-button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: #d32f2f;
+  color: white;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.remove-file-button:hover:not(:disabled) {
+  background: #9a0007;
+}
+
+/* Upload progress indicator */
+.upload-progress {
+  padding: 0.5rem;
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  color: #1565c0;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* File input styling */
+input[type="file"] {
+  padding: 0.5rem;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+input[type="file"]:hover:not(:disabled) {
+  border-color: #4a90e2;
+  background: #f9f9f9;
+}
+
 @media (max-width: 640px) {
   .entry-form-card {
     padding: 1.5rem;

@@ -5,6 +5,7 @@ export interface Env {
   DB: D1Database;
   AUTH_SECRET: string;
   AUTH_PASSWORD: string;
+  IMAGES: R2Bucket;
 }
 
 // D1 row result (from database, before parsing)
@@ -18,6 +19,7 @@ export interface EntryRow {
   content_md: string;
   reference_urls: string | null; // JSON string
   video_url: string | null;
+  image_urls: string | null; // JSON string
   created_at: string;
   updated_at: string;
 }
@@ -34,6 +36,7 @@ export function rowToEntry(row: EntryRow): Entry {
     content_md: row.content_md,
     references: row.reference_urls ? JSON.parse(row.reference_urls) : [],
     video_url: row.video_url || undefined,
+    image_urls: row.image_urls ? JSON.parse(row.image_urls) : undefined,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };

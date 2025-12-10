@@ -190,6 +190,22 @@ function EntryDetail() {
           </div>
         )}
 
+        {entry.image_urls && entry.image_urls.length > 0 && (
+          <section className="image-gallery">
+            <div className="gallery-grid">
+              {entry.image_urls.map((url, index) => (
+                <div key={url} className="gallery-item">
+                  <img
+                    src={url}
+                    alt={`${entry.title} - Image ${index + 1}`}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <div
           className="markdown-content"
           dangerouslySetInnerHTML={{

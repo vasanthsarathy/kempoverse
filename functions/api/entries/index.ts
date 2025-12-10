@@ -22,7 +22,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     if (searchQuery) {
       query = `
         SELECT e.id, e.title, e.category, e.subcategory, e.belts, e.tags,
-               e.content_md, e.reference_urls, e.video_url, e.created_at, e.updated_at
+               e.content_md, e.reference_urls, e.video_url, e.image_urls, e.created_at, e.updated_at
         FROM entries e
         INNER JOIN entries_fts fts ON e.id = fts.id
         WHERE entries_fts MATCH ?
@@ -33,7 +33,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       // Regular query without search
       query = `
         SELECT id, title, category, subcategory, belts, tags,
-               content_md, reference_urls, video_url, created_at, updated_at
+               content_md, reference_urls, video_url, image_urls, created_at, updated_at
         FROM entries
         WHERE 1=1
       `;
@@ -109,13 +109,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const referencesJson = body.references && body.references.length > 0
       ? JSON.stringify(body.references)
       : null;
+    const imageUrlsJson = body.image_urls && body.image_urls.length > 0
+      ? JSON.stringify(body.image_urls)
+      : null;
 
     // Insert into database
     await DB.prepare(`
       INSERT INTO entries (
         id, title, category, subcategory, belts, tags,
-        content_md, reference_urls, video_url, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        content_md, reference_urls, video_url, image_urls, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id,
       body.title,
@@ -126,6 +129,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       body.content_md,
       referencesJson,
       body.video_url || null,
+      imageUrlsJson,
       now,
       now
     ).run();
@@ -133,7 +137,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // Fetch the created entry
     const result = await DB.prepare(`
       SELECT id, title, category, subcategory, belts, tags,
-        content_md, reference_urls, video_url, created_at, updated_at
+        content_md, reference_urls, video_url, image_urls, created_at, updated_at
       FROM entries
       WHERE id = ?
     `).bind(id).first<EntryRow>();

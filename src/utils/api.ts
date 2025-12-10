@@ -141,3 +141,37 @@ export async function getAllTags(): Promise<string[]> {
 
   return Array.from(tagSet).sort();
 }
+
+/**
+ * Upload a single image file to R2 storage
+ * Returns the public URL of the uploaded image
+ */
+export async function uploadImage(
+  entryId: string,
+  file: File,
+  token: string
+): Promise<string> {
+  const formData = new FormData();
+  formData.append('entry_id', entryId);
+  formData.append('image', file);
+
+  const response = await fetch(`${API_BASE}/images/upload`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to upload image');
+  }
+
+  const json: ApiResponse<{ url: string }> = await response.json();
+  if (json.error || !json.data) {
+    throw new Error(json.error || 'No URL returned');
+  }
+
+  return json.data.url;
+}

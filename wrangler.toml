@@ -8,3 +8,8 @@ binding = "DB"  # Access in code as context.env.DB
 database_name = "kempoverse-db"
 database_id = "f35a81c9-1470-4e48-85cc-1ad58576f057"
 migrations_dir = "migrations"
+
+# R2 Object Storage binding for image uploads
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "kempoverse-images"

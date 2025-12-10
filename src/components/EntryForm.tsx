@@ -1,7 +1,7 @@
 import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { createEntry, updateEntry, getAllTags } from '../utils/api';
+import { createEntry, updateEntry, getAllTags, uploadImage } from '../utils/api';
 import type { Entry, Category } from '../types';
 import './EntryForm.css';
 
@@ -22,6 +22,14 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Image upload state
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>(
+    existingEntry?.image_urls || []
+  );
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string>('');
 
   // Tag autocomplete state
   const [allTags, setAllTags] = useState<string[]>([]);
@@ -95,6 +103,44 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
     }
   };
 
+  // Handle image file selection
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    // Validate file types
+    const validFiles = files.filter(file => {
+      const isValid = file.type.startsWith('image/');
+      if (!isValid) {
+        setError(`${file.name} is not a valid image file`);
+      }
+      return isValid;
+    });
+
+    // Validate file sizes (5MB max)
+    const sizedFiles = validFiles.filter(file => {
+      const isValid = file.size <= 5 * 1024 * 1024;
+      if (!isValid) {
+        setError(`${file.name} is too large (max 5MB)`);
+      }
+      return isValid;
+    });
+
+    setImageFiles(prev => [...prev, ...sizedFiles]);
+    if (sizedFiles.length > 0) {
+      setError('');
+    }
+  };
+
+  // Remove uploaded image
+  const handleRemoveImage = (index: number) => {
+    setUploadedImageUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Remove pending file
+  const handleRemoveFile = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
@@ -114,28 +160,80 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
         throw new Error('At least one tag is required');
       }
 
-      const entryData = {
-        title,
-        category,
-        subcategory: subcategory || undefined,
-        belts,
-        tags,
-        content_md: content,
-        references,
-        video_url: videoUrl || undefined,
-      };
+      // Create or update entry first to get ID
+      let entryId = existingEntry?.id;
 
+      // For new entries, create it first
       if (mode === 'create') {
+        const entryData = {
+          title,
+          category,
+          subcategory: subcategory || undefined,
+          belts,
+          tags,
+          content_md: content,
+          references,
+          video_url: videoUrl || undefined,
+          image_urls: uploadedImageUrls.length > 0 ? uploadedImageUrls : undefined,
+        };
+
         const newEntry = await createEntry(entryData, token);
-        navigate(`/entry/${newEntry.id}`);
-      } else if (existingEntry) {
-        const updated = await updateEntry(existingEntry.id, entryData, token);
-        navigate(`/entry/${updated.id}`);
+        entryId = newEntry.id;
       }
+
+      // Upload new images if any
+      if (imageFiles.length > 0 && entryId) {
+        setUploading(true);
+        const newImageUrls: string[] = [];
+
+        for (let i = 0; i < imageFiles.length; i++) {
+          const file = imageFiles[i];
+          setUploadProgress(`Uploading image ${i + 1} of ${imageFiles.length}...`);
+
+          try {
+            const url = await uploadImage(entryId, file, token);
+            newImageUrls.push(url);
+          } catch (err) {
+            console.error(`Failed to upload ${file.name}:`, err);
+            // Continue with other uploads
+          }
+        }
+
+        // Combine with existing URLs
+        const allImageUrls = [...uploadedImageUrls, ...newImageUrls];
+
+        // Update entry with image URLs
+        if (mode === 'edit' && existingEntry) {
+          await updateEntry(existingEntry.id, { image_urls: allImageUrls }, token);
+        } else if (mode === 'create') {
+          await updateEntry(entryId, { image_urls: allImageUrls }, token);
+        }
+
+        setUploading(false);
+        setUploadProgress('');
+      } else if (mode === 'edit' && existingEntry) {
+        // Edit mode without new images
+        const entryData = {
+          title,
+          category,
+          subcategory: subcategory || undefined,
+          belts,
+          tags,
+          content_md: content,
+          references,
+          video_url: videoUrl || undefined,
+          image_urls: uploadedImageUrls.length > 0 ? uploadedImageUrls : undefined,
+        };
+
+        await updateEntry(existingEntry.id, entryData, token);
+      }
+
+      navigate(`/entry/${entryId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save entry');
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -266,9 +364,65 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               value={videoUrl}
               onChange={(e) => setVideoUrl(e.target.value)}
               placeholder="https://youtube.com/watch?v=..."
-              disabled={loading}
+              disabled={loading || uploading}
             />
             <span className="help-text">Paste a YouTube URL to embed video</span>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="images">Images</label>
+
+            {/* Existing uploaded images */}
+            {uploadedImageUrls.length > 0 && (
+              <div className="image-preview-grid">
+                {uploadedImageUrls.map((url, index) => (
+                  <div key={url} className="image-preview-item">
+                    <img src={url} alt={`Upload ${index + 1}`} />
+                    <button
+                      type="button"
+                      className="remove-image-button"
+                      onClick={() => handleRemoveImage(index)}
+                      disabled={loading || uploading}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* New files to upload */}
+            {imageFiles.length > 0 && (
+              <div className="file-list">
+                {imageFiles.map((file, index) => (
+                  <div key={index} className="file-item">
+                    <span className="file-name">{file.name}</span>
+                    <button
+                      type="button"
+                      className="remove-file-button"
+                      onClick={() => handleRemoveFile(index)}
+                      disabled={loading || uploading}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <input
+              type="file"
+              id="images"
+              accept="image/*"
+              multiple
+              onChange={handleImageSelect}
+              disabled={loading || uploading}
+            />
+            <span className="help-text">
+              Select multiple images (JPG, PNG, WebP, GIF - max 5MB each)
+            </span>
+
+            {uploading && <div className="upload-progress">{uploadProgress}</div>}
           </div>
 
           {error && <div className="error-message">{error}</div>}
@@ -278,12 +432,12 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               type="button"
               className="cancel-button"
               onClick={() => navigate(-1)}
-              disabled={loading}
+              disabled={loading || uploading}
             >
               Cancel
             </button>
-            <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? 'Saving...' : mode === 'create' ? 'Create Entry' : 'Update Entry'}
+            <button type="submit" className="submit-button" disabled={loading || uploading}>
+              {uploading ? uploadProgress : loading ? 'Saving...' : mode === 'create' ? 'Create Entry' : 'Update Entry'}
             </button>
           </div>
         </form>
