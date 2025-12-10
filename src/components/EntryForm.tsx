@@ -49,30 +49,6 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
       .catch(err => console.error('Failed to load tags:', err));
   }, []);
 
-  // Global paste listener for debugging
-  useEffect(() => {
-    const globalPasteHandler = (e: ClipboardEvent) => {
-      console.log('GLOBAL PASTE EVENT DETECTED!');
-      console.log('Target:', e.target);
-      console.log('Clipboard data:', e.clipboardData);
-
-      const items = e.clipboardData?.items;
-      if (items) {
-        console.log('Number of items:', items.length);
-        for (let i = 0; i < items.length; i++) {
-          console.log(`Item ${i}:`, items[i].kind, items[i].type);
-        }
-      }
-    };
-
-    document.addEventListener('paste', globalPasteHandler);
-    console.log('Global paste listener attached!');
-
-    return () => {
-      document.removeEventListener('paste', globalPasteHandler);
-    };
-  }, []);
-
   // Update tag suggestions when tagsText changes
   const handleTagsChange = (value: string) => {
     setTagsText(value);
@@ -158,43 +134,6 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     addImageFiles(files);
-  };
-
-  // Handle paste in content textarea (for images)
-  const handleContentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    console.log('Paste event fired!');
-
-    const items = e.clipboardData?.items;
-    console.log('Clipboard items:', items);
-
-    if (!items) {
-      console.log('No clipboard items found');
-      return;
-    }
-
-    const files: File[] = [];
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      console.log(`Item ${i}:`, { kind: item.kind, type: item.type });
-
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        console.log('Image file found:', file);
-        if (file) {
-          files.push(file);
-        }
-      }
-    }
-
-    console.log('Total image files found:', files.length);
-
-    // If images found, prevent default paste and add to upload list
-    if (files.length > 0) {
-      e.preventDefault();
-      addImageFiles(files);
-      console.log('Images added to upload list');
-    }
-    // Otherwise let text paste normally
   };
 
   // Handle drag and drop events
@@ -424,8 +363,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              onPaste={handleContentPaste}
-              placeholder="Enter content in Markdown format... (paste images here to upload)"
+              placeholder="Enter content in Markdown format..."
               rows={12}
               required
               disabled={loading}
@@ -520,7 +458,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
                   <span className="drop-zone-text">Drop images here</span>
                 ) : (
                   <>
-                    <span className="drop-zone-text">Drag & drop, paste (Ctrl+V), or click to browse</span>
+                    <span className="drop-zone-text">Drag & drop images or click to browse</span>
                     <span className="drop-zone-hint">JPG, PNG, WebP, GIF - max 5MB each</span>
                   </>
                 )}
