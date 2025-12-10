@@ -179,22 +179,22 @@ function Home() {
               className="filter-input"
               autoComplete="off"
             />
-            {(() => {
-              console.log('Rendering dropdown check:', { showTagSuggestions, suggestionsLength: tagSuggestions.length });
-              return showTagSuggestions && tagSuggestions.length > 0 && (
-                <ul className="tag-suggestions">
-                  {tagSuggestions.map((tag, index) => (
-                    <li
-                      key={tag}
-                      className={index === selectedTagIndex ? 'selected' : ''}
-                      onClick={() => selectTagSuggestion(tag)}
-                    >
-                      #{tag}
-                    </li>
-                  ))}
-                </ul>
-              );
-            })()}
+            {/* Force show dropdown for testing */}
+            {allTags.length > 0 && (
+              <ul className="tag-suggestions">
+                <li style={{ padding: '1rem', fontSize: '14px', fontWeight: 'bold' }}>
+                  TEST: If you see this, the dropdown works!
+                </li>
+                {allTags.slice(0, 5).map((tag, index) => (
+                  <li
+                    key={tag}
+                    onClick={() => selectTagSuggestion(tag)}
+                  >
+                    #{tag}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <input
