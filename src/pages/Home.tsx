@@ -83,6 +83,8 @@ function Home() {
       const matches = allTags.filter(tag =>
         tag.toLowerCase().includes(value.toLowerCase())
       );
+      console.log('Matches found:', matches);
+      console.log('Setting showTagSuggestions to:', matches.length > 0);
       setTagSuggestions(matches);
       setShowTagSuggestions(matches.length > 0);
       setSelectedTagIndex(-1);
@@ -175,19 +177,22 @@ function Home() {
               className="filter-input"
               autoComplete="off"
             />
-            {showTagSuggestions && tagSuggestions.length > 0 && (
-              <ul className="tag-suggestions">
-                {tagSuggestions.map((tag, index) => (
-                  <li
-                    key={tag}
-                    className={index === selectedTagIndex ? 'selected' : ''}
-                    onClick={() => selectTagSuggestion(tag)}
-                  >
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {(() => {
+              console.log('Rendering dropdown check:', { showTagSuggestions, suggestionsLength: tagSuggestions.length });
+              return showTagSuggestions && tagSuggestions.length > 0 && (
+                <ul className="tag-suggestions">
+                  {tagSuggestions.map((tag, index) => (
+                    <li
+                      key={tag}
+                      className={index === selectedTagIndex ? 'selected' : ''}
+                      onClick={() => selectTagSuggestion(tag)}
+                    >
+                      #{tag}
+                    </li>
+                  ))}
+                </ul>
+              );
+            })()}
           </div>
 
           <input
