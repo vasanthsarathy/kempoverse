@@ -281,13 +281,6 @@
   background: #f0f7ff;
 }
 
-.image-drop-zone:focus {
-  outline: none;
-  border-color: #4a90e2;
-  background: #f0f7ff;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
 .image-drop-zone.dragging {
   border-color: #4a90e2;
   background: #e3f2fd;

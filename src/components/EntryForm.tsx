@@ -49,6 +49,44 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
       .catch(err => console.error('Failed to load tags:', err));
   }, []);
 
+  // Listen for paste events at document level
+  useEffect(() => {
+    const handleDocumentPaste = (e: ClipboardEvent) => {
+      // Only process if not disabled and not pasting into a text input
+      if (loading || uploading) return;
+
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        // Let text inputs handle their own paste events
+        return;
+      }
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      const files: File[] = [];
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) {
+            files.push(file);
+          }
+        }
+      }
+
+      if (files.length > 0) {
+        e.preventDefault();
+        addImageFiles(files);
+      }
+    };
+
+    document.addEventListener('paste', handleDocumentPaste);
+    return () => {
+      document.removeEventListener('paste', handleDocumentPaste);
+    };
+  }, [loading, uploading]);
+
   // Update tag suggestions when tagsText changes
   const handleTagsChange = (value: string) => {
     setTagsText(value);
@@ -156,28 +194,6 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
 
     const files = Array.from(e.dataTransfer.files);
     addImageFiles(files);
-  };
-
-  // Handle paste events
-  const handlePaste = (e: React.ClipboardEvent) => {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-
-    const files: File[] = [];
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item.kind === 'file' && item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        if (file) {
-          files.push(file);
-        }
-      }
-    }
-
-    if (files.length > 0) {
-      e.preventDefault();
-      addImageFiles(files);
-    }
   };
 
   // Remove uploaded image
@@ -465,8 +481,6 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              onPaste={handlePaste}
-              tabIndex={0}
             >
               <input
                 type="file"
@@ -483,7 +497,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
                 ) : (
                   <>
                     <span className="drop-zone-text">Drag & drop, paste (Ctrl+V), or click to browse</span>
-                    <span className="drop-zone-hint">Click here first to paste images • JPG, PNG, WebP, GIF - max 5MB each</span>
+                    <span className="drop-zone-hint">JPG, PNG, WebP, GIF - max 5MB each</span>
                   </>
                 )}
               </label>
