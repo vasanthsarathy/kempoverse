@@ -1,14 +1,12 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchEntries, getAllTags, type FetchEntriesParams } from '../utils/api';
+import { fetchEntries, type FetchEntriesParams } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 import EntryList from '../components/EntryList';
 import type { Entry } from '../types';
 import './Home.css';
 
 function Home() {
-  console.log('Home component rendered!');
-
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,20 +18,6 @@ function Home() {
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [tagFilter, setTagFilter] = useState('');
   const [beltFilter, setBeltFilter] = useState('');
-
-  // Tag autocomplete state
-  const [allTags, setAllTags] = useState<string[]>([]);
-  const [tagSuggestions, setTagSuggestions] = useState<string[]>([]);
-  const [showTagSuggestions, setShowTagSuggestions] = useState(false);
-  const [selectedTagIndex, setSelectedTagIndex] = useState(-1);
-  const tagInputRef = useRef<HTMLInputElement>(null);
-
-  // Fetch all tags on mount
-  useEffect(() => {
-    getAllTags()
-      .then(tags => setAllTags(tags))
-      .catch(err => console.error('Failed to load tags:', err));
-  }, []);
 
   // Debounce search input
   useEffect(() => {
@@ -74,54 +58,6 @@ function Home() {
     setCategoryFilter('');
     setTagFilter('');
     setBeltFilter('');
-    setShowTagSuggestions(false);
-  };
-
-  // Handle tag filter input changes
-  const handleTagFilterChange = (value: string) => {
-    setTagFilter(value);
-
-    if (value.length > 0) {
-      const matches = allTags.filter(tag =>
-        tag.toLowerCase().includes(value.toLowerCase())
-      );
-      console.log('Matches found:', matches);
-      console.log('Setting showTagSuggestions to:', matches.length > 0);
-      setTagSuggestions(matches);
-      setShowTagSuggestions(matches.length > 0);
-      setSelectedTagIndex(-1);
-    } else {
-      setShowTagSuggestions(false);
-      setTagSuggestions([]);
-    }
-  };
-
-  // Handle selecting a tag suggestion
-  const selectTagSuggestion = (tag: string) => {
-    setTagFilter(tag);
-    setShowTagSuggestions(false);
-    setTagSuggestions([]);
-    tagInputRef.current?.focus();
-  };
-
-  // Handle keyboard navigation in tag suggestions
-  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!showTagSuggestions) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedTagIndex(prev =>
-        prev < tagSuggestions.length - 1 ? prev + 1 : prev
-      );
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedTagIndex(prev => (prev > 0 ? prev - 1 : -1));
-    } else if (e.key === 'Enter' && selectedTagIndex >= 0) {
-      e.preventDefault();
-      selectTagSuggestion(tagSuggestions[selectedTagIndex]);
-    } else if (e.key === 'Escape') {
-      setShowTagSuggestions(false);
-    }
   };
 
   const hasActiveFilters = searchInput || categoryFilter || tagFilter || beltFilter;
@@ -166,36 +102,13 @@ function Home() {
             <option value="basic">Basic</option>
           </select>
 
-          <div className="tag-filter-wrapper">
-            <input
-              type="text"
-              ref={tagInputRef}
-              placeholder="Filter by tag..."
-              value={tagFilter}
-              onChange={(e) => handleTagFilterChange(e.target.value)}
-              onKeyDown={handleTagKeyDown}
-              onFocus={() => handleTagFilterChange(tagFilter)}
-              onBlur={() => setTimeout(() => setShowTagSuggestions(false), 200)}
-              className="filter-input"
-              autoComplete="off"
-            />
-            {/* Force show dropdown for testing */}
-            {allTags.length > 0 && (
-              <ul className="tag-suggestions">
-                <li style={{ padding: '1rem', fontSize: '14px', fontWeight: 'bold' }}>
-                  TEST: If you see this, the dropdown works!
-                </li>
-                {allTags.slice(0, 5).map((tag, index) => (
-                  <li
-                    key={tag}
-                    onClick={() => selectTagSuggestion(tag)}
-                  >
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <input
+            type="text"
+            placeholder="Filter by tag..."
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+            className="filter-input"
+          />
 
           <input
             type="text"
