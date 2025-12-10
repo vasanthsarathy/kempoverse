@@ -30,6 +30,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
   );
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
 
   // Tag autocomplete state
   const [allTags, setAllTags] = useState<string[]>([]);
@@ -103,10 +104,8 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
     }
   };
 
-  // Handle image file selection
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-
+  // Validate and add image files (used by both file input and drag-drop)
+  const addImageFiles = (files: File[]) => {
     // Validate file types
     const validFiles = files.filter(file => {
       const isValid = file.type.startsWith('image/');
@@ -129,6 +128,34 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
     if (sizedFiles.length > 0) {
       setError('');
     }
+  };
+
+  // Handle image file selection from file input
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    addImageFiles(files);
+  };
+
+  // Handle drag and drop events
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    addImageFiles(files);
   };
 
   // Remove uploaded image
@@ -410,17 +437,33 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               </div>
             )}
 
-            <input
-              type="file"
-              id="images"
-              accept="image/*"
-              multiple
-              onChange={handleImageSelect}
-              disabled={loading || uploading}
-            />
-            <span className="help-text">
-              Select multiple images (JPG, PNG, WebP, GIF - max 5MB each)
-            </span>
+            {/* Drag and drop zone */}
+            <div
+              className={`image-drop-zone ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <input
+                type="file"
+                id="images"
+                accept="image/*"
+                multiple
+                onChange={handleImageSelect}
+                disabled={loading || uploading}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="images" className="drop-zone-label">
+                {isDragging ? (
+                  <span className="drop-zone-text">Drop images here</span>
+                ) : (
+                  <>
+                    <span className="drop-zone-text">Drag & drop images here or click to browse</span>
+                    <span className="drop-zone-hint">JPG, PNG, WebP, GIF - max 5MB each</span>
+                  </>
+                )}
+              </label>
+            </div>
 
             {uploading && <div className="upload-progress">{uploadProgress}</div>}
           </div>
