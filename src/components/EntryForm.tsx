@@ -291,7 +291,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
       <div className="entry-form-card">
         <h2>{mode === 'create' ? 'Create New Entry' : 'Edit Entry'}</h2>
 
-        <form onSubmit={handleSubmit} onPaste={handlePaste} className="entry-form">
+        <form onSubmit={handleSubmit} className="entry-form">
           <div className="form-group">
             <label htmlFor="title">Title *</label>
             <input
@@ -465,6 +465,8 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              onPaste={handlePaste}
+              tabIndex={0}
             >
               <input
                 type="file"
@@ -480,8 +482,8 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
                   <span className="drop-zone-text">Drop images here</span>
                 ) : (
                   <>
-                    <span className="drop-zone-text">Drag & drop, paste, or click to browse</span>
-                    <span className="drop-zone-hint">JPG, PNG, WebP, GIF - max 5MB each</span>
+                    <span className="drop-zone-text">Drag & drop, paste (Ctrl+V), or click to browse</span>
+                    <span className="drop-zone-hint">Click here first to paste images • JPG, PNG, WebP, GIF - max 5MB each</span>
                   </>
                 )}
               </label>
