@@ -158,6 +158,28 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
     addImageFiles(files);
   };
 
+  // Handle paste events
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const files: File[] = [];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          files.push(file);
+        }
+      }
+    }
+
+    if (files.length > 0) {
+      e.preventDefault();
+      addImageFiles(files);
+    }
+  };
+
   // Remove uploaded image
   const handleRemoveImage = (index: number) => {
     setUploadedImageUrls(prev => prev.filter((_, i) => i !== index));
@@ -269,7 +291,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
       <div className="entry-form-card">
         <h2>{mode === 'create' ? 'Create New Entry' : 'Edit Entry'}</h2>
 
-        <form onSubmit={handleSubmit} className="entry-form">
+        <form onSubmit={handleSubmit} onPaste={handlePaste} className="entry-form">
           <div className="form-group">
             <label htmlFor="title">Title *</label>
             <input
@@ -458,7 +480,7 @@ export default function EntryForm({ existingEntry, mode }: EntryFormProps) {
                   <span className="drop-zone-text">Drop images here</span>
                 ) : (
                   <>
-                    <span className="drop-zone-text">Drag & drop images here or click to browse</span>
+                    <span className="drop-zone-text">Drag & drop, paste, or click to browse</span>
                     <span className="drop-zone-hint">JPG, PNG, WebP, GIF - max 5MB each</span>
                   </>
                 )}
