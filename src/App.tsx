@@ -6,6 +6,10 @@ import Login from './pages/Login';
 import CreateEntry from './pages/CreateEntry';
 import EditEntry from './pages/EditEntry';
 import EntryDetail from './components/EntryDetail';
+import TrainingSetup from './pages/TrainingSetup';
+import TrainingSession from './pages/TrainingSession';
+import TrainingHistory from './pages/TrainingHistory';
+import TrainingSessionDetail from './pages/TrainingSessionDetail';
 import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from './components/Sidebar';
 import './App.css';
@@ -70,6 +74,17 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/training/setup"
+            element={
+              <ProtectedRoute>
+                <TrainingSetup />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/training/session/:id" element={<TrainingSession />} />
+          <Route path="/training/history" element={<TrainingHistory />} />
+          <Route path="/training/sessions/:id" element={<TrainingSessionDetail />} />
         </Routes>
         </main>
 

@@ -48,3 +48,30 @@ export interface LoginResponse {
   token: string;
   expiresAt: string;
 }
+
+// Training types
+export type VariationType = 'stance' | 'speed' | 'focus' | 'repetition';
+
+export interface TrainingSession {
+  id: string;
+  duration_minutes: number;
+  categories: Category[];
+  entry_count: number;
+  started_at: string;
+  completed_at?: string;
+  status: 'active' | 'completed' | 'abandoned';
+  items?: TrainingSessionItem[];
+}
+
+export interface TrainingSessionItem {
+  id: string;
+  session_id: string;
+  entry_id: string;
+  entry_title: string;
+  entry_category: Category;
+  time_allocated_seconds: number;
+  variation_type?: VariationType;
+  variation_text?: string;
+  sequence_order: number;
+  completed_at?: string;
+}

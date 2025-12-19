@@ -1,4 +1,4 @@
-import type { Entry } from '../src/types';
+import type { Entry, TrainingSession, TrainingSessionItem } from '../src/types';
 
 // Cloudflare Pages Functions environment
 export interface Env {
@@ -65,4 +65,58 @@ export function jsonResponse<T>(
     status,
     headers: CORS_HEADERS,
   });
+}
+
+// Training session row (from database, before parsing)
+export interface TrainingSessionRow {
+  id: string;
+  duration_minutes: number;
+  categories: string; // JSON string
+  entry_count: number;
+  started_at: string;
+  completed_at: string | null;
+  status: string;
+}
+
+// Training session item row (from database, before parsing)
+export interface TrainingSessionItemRow {
+  id: string;
+  session_id: string;
+  entry_id: string;
+  entry_title: string;
+  entry_category: string;
+  time_allocated_seconds: number;
+  variation_type: string | null;
+  variation_text: string | null;
+  sequence_order: number;
+  completed_at: string | null;
+}
+
+// Convert database row to TrainingSession
+export function rowToTrainingSession(row: TrainingSessionRow): TrainingSession {
+  return {
+    id: row.id,
+    duration_minutes: row.duration_minutes,
+    categories: JSON.parse(row.categories),
+    entry_count: row.entry_count,
+    started_at: row.started_at,
+    completed_at: row.completed_at || undefined,
+    status: row.status as TrainingSession['status'],
+  };
+}
+
+// Convert database row to TrainingSessionItem
+export function rowToTrainingSessionItem(row: TrainingSessionItemRow): TrainingSessionItem {
+  return {
+    id: row.id,
+    session_id: row.session_id,
+    entry_id: row.entry_id,
+    entry_title: row.entry_title,
+    entry_category: row.entry_category as TrainingSessionItem['entry_category'],
+    time_allocated_seconds: row.time_allocated_seconds,
+    variation_type: row.variation_type as TrainingSessionItem['variation_type'],
+    variation_text: row.variation_text || undefined,
+    sequence_order: row.sequence_order,
+    completed_at: row.completed_at || undefined,
+  };
 }

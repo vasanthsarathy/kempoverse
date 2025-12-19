@@ -1,0 +1,292 @@
+.training-session {
+  padding: 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.training-session.loading,
+.training-session.error {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f5f5f5;
+  border-top-color: #d32f2f;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.training-session.loading p {
+  color: #666;
+  font-size: 14px;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 16px;
+  margin-bottom: 1.5rem;
+}
+
+.back-button {
+  padding: 0.75rem 1.5rem;
+  background: #d32f2f;
+  color: white;
+  text-decoration: none;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background 0.2s;
+}
+
+.back-button:hover {
+  background: #9a0007;
+}
+
+/* Progress Bar */
+.progress-bar {
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  padding: 1rem;
+}
+
+.progress-text {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.progress-track {
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4a90e2;
+  transition: width 0.3s ease;
+}
+
+/* Timer Display */
+.timer-display {
+  background: white;
+  border: 2px solid #d32f2f;
+  border-radius: 2px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.timer-value {
+  font-size: 60px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: #d32f2f;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.pause-button {
+  padding: 0.75rem 1.5rem;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pause-button:hover {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+/* Technique Card */
+.technique-card {
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  padding: 1.5rem;
+}
+
+.technique-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.technique-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.technique-title:hover {
+  color: #d32f2f;
+}
+
+.category-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.category-technique {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.category-form {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.category-self_defense {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.category-basic {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.variation-instruction {
+  background: #fff3e0;
+  border-left: 4px solid #d32f2f;
+  padding: 1rem;
+  font-size: 16px;
+  font-family: var(--font-mono);
+}
+
+.variation-label {
+  font-weight: 600;
+  color: #d32f2f;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.variation-text {
+  color: #333;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Session Controls */
+.session-controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-button {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  color: #333;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.nav-button.next {
+  background: #d32f2f;
+  color: white;
+  border-color: #d32f2f;
+}
+
+.nav-button.next:hover:not(:disabled) {
+  background: #9a0007;
+}
+
+.nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.end-session-button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: #999;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.end-session-button:hover {
+  background: #ffe5e5;
+  border-color: #d32f2f;
+  color: #d32f2f;
+}
+
+@media (max-width: 768px) {
+  .training-session {
+    padding: 1rem;
+  }
+
+  .timer-value {
+    font-size: 48px;
+  }
+
+  .variation-text {
+    font-size: 16px;
+  }
+
+  .technique-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

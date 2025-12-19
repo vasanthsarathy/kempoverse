@@ -1,4 +1,9 @@
-import type { Entry, ApiResponse, EntryListResponse } from '../types';
+import type {
+  Entry,
+  ApiResponse,
+  EntryListResponse,
+  TrainingSession,
+} from '../types';
 
 // For local development with Wrangler, use relative path
 // Wrangler serves both the frontend and API from the same origin
@@ -174,4 +179,114 @@ export async function uploadImage(
   }
 
   return json.data.url;
+}
+
+// Training API functions
+
+export interface CreateTrainingSessionParams {
+  duration_minutes: number;
+  categories: string[];
+}
+
+export async function createTrainingSession(
+  params: CreateTrainingSessionParams,
+  token: string
+): Promise<TrainingSession> {
+  const response = await fetch(`${API_BASE}/training/sessions`, {
+    method: 'POST',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to create training session');
+  }
+
+  const json: ApiResponse<TrainingSession> = await response.json();
+  if (json.error || !json.data) {
+    throw new Error(json.error || 'Failed to create training session');
+  }
+
+  return json.data;
+}
+
+export interface FetchTrainingSessionsParams {
+  limit?: number;
+  offset?: number;
+}
+
+export async function fetchTrainingSessions(
+  params?: FetchTrainingSessionsParams
+): Promise<{ sessions: TrainingSession[]; total: number }> {
+  const url = new URL(`${API_BASE}/training/sessions`, window.location.origin);
+
+  if (params?.limit) {
+    url.searchParams.set('limit', params.limit.toString());
+  }
+  if (params?.offset) {
+    url.searchParams.set('offset', params.offset.toString());
+  }
+
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error('Failed to fetch training sessions');
+  }
+
+  const json: ApiResponse<{ sessions: TrainingSession[]; total: number }> =
+    await response.json();
+  if (json.error || !json.data) {
+    throw new Error(json.error || 'Failed to fetch training sessions');
+  }
+
+  return json.data;
+}
+
+export async function fetchTrainingSession(id: string): Promise<TrainingSession> {
+  const response = await fetch(`${API_BASE}/training/sessions/${id}`);
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Training session not found');
+    }
+    throw new Error('Failed to fetch training session');
+  }
+
+  const json: ApiResponse<TrainingSession> = await response.json();
+  if (json.error || !json.data) {
+    throw new Error(json.error || 'Failed to fetch training session');
+  }
+
+  return json.data;
+}
+
+export async function updateTrainingSession(
+  id: string,
+  updates: { status: 'completed' | 'abandoned'; completed_at?: string },
+  token: string
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/training/sessions/${id}`, {
+    method: 'PUT',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(updates),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to update training session');
+  }
+}
+
+export async function deleteTrainingSession(
+  id: string,
+  token: string
+): Promise<void> {
+  const response = await fetch(`${API_BASE}/training/sessions/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(token),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to delete training session');
+  }
 }

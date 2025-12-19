@@ -1,0 +1,201 @@
+.training-setup {
+  padding: 1rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.setup-card {
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  padding: 1.5rem;
+}
+
+.setup-card h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #333;
+}
+
+.duration-input {
+  padding: 0.75rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  font-size: 16px;
+  font-family: var(--font-mono);
+  background: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.duration-input:focus {
+  outline: none;
+  border-color: #999;
+  background: #fff;
+}
+
+.category-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  background: #fafafa;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.checkbox-label:hover {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkbox-label span {
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+.help-text {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.session-preview {
+  background: #f0f7ff;
+  border: 1px solid #4a90e2;
+  border-radius: 2px;
+  padding: 1rem;
+}
+
+.session-preview h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #4a90e2;
+}
+
+.preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-family: var(--font-mono);
+}
+
+.preview-label {
+  color: #666;
+}
+
+.preview-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.error-message {
+  background: #ffe5e5;
+  border: 1px solid #d32f2f;
+  border-radius: 2px;
+  padding: 0.75rem;
+  color: #d32f2f;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.start-button {
+  padding: 0.875rem 1.5rem;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-button:hover:not(:disabled) {
+  background: #9a0007;
+}
+
+.start-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  padding: 0.75rem 1.5rem;
+  background: #f0f0f0;
+  color: #333;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .training-setup {
+    padding: 0.75rem;
+  }
+
+  .setup-card {
+    padding: 1rem;
+  }
+}

@@ -193,6 +193,19 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
             );
           })
         )}
+
+        {/* Training Section */}
+        <div className="sidebar-section training-section">
+          <h3 className="section-title">Training</h3>
+          <div className="section-links">
+            <Link to="/training/setup" className="section-link" onClick={onClose}>
+              Start Training Session
+            </Link>
+            <Link to="/training/history" className="section-link" onClick={onClose}>
+              Training History
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
